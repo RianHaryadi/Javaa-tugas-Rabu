@@ -1,3 +1,9 @@
+//Kelompok 2 
+//  1   RAFRI ATHALLAH MARSHALL -11122167
+//  2   ROBIYANSAH              -11122311
+//  3   RIAN HARYADI            -11122261
+//  4   WISNU DANU BRATA        -11122477
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
