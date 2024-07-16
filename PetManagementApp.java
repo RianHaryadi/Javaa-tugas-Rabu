@@ -2,17 +2,20 @@
 //  1   RAFRI ATHALLAH MARSHALL -11122167
 //  2   ROBIYANSAH              -11122311
 //  3   RIAN HARYADI            -11122261
-//  4   WISNU DANU BRATA        -11122477
+//  4   WISNU DANU BRATA        -
 
-import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
+import java.util.ArrayList;
+import java.util.List;
+import javax.swing.*;
+import javax.swing.table.DefaultTableModel;
 
 // Interface untuk mendefinisikan metode dasar hewan peliharaan
 interface Pet {
     String getName();
     String getType();
+    void setName(String name);
+    void setType(String type);
 }
 
 // Class dasar untuk hewan peliharaan
@@ -36,6 +39,18 @@ class Animal implements Pet {
     public String getType() {
         return type;
     }
+
+    // Setter untuk name
+    @Override
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    // Setter untuk type
+    @Override
+    public void setType(String type) {
+        this.type = type;
+    }
 }
 
 // Subclass untuk Anjing, mewarisi dari Animal (inheritance)
@@ -54,14 +69,17 @@ class Cat extends Animal {
 
 // Class utama untuk GUI aplikasi
 public class PetManagementApp {
-    private JFrame frame;
-    private JTextField petNameField;
-    private JComboBox<String> petTypeComboBox;
-    private JTextArea outputArea;
+    private final JFrame frame;
+    private final JTextField petNameField;
+    private final JComboBox<String> petTypeComboBox;
+    private final JTextArea outputArea;
+    private final JTable petTable;
+    private final DefaultTableModel tableModel;
+    private final List<Pet> petList;
 
     public PetManagementApp() {
         frame = new JFrame("Pet Management");
-        frame.setSize(400, 300);
+        frame.setSize(700, 700);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setLayout(new BorderLayout());
 
@@ -80,22 +98,28 @@ public class PetManagementApp {
         JButton addButton = new JButton("Add Pet");
         inputPanel.add(addButton);
 
+        JButton editButton = new JButton("Edit Pet");
+        inputPanel.add(editButton);
+
+        frame.add(inputPanel, BorderLayout.NORTH);
+
         // Area untuk output
         outputArea = new JTextArea();
         outputArea.setEditable(false);
         JScrollPane scrollPane = new JScrollPane(outputArea);
-
-        // Menambahkan komponen ke frame
-        frame.add(inputPanel, BorderLayout.NORTH);
         frame.add(scrollPane, BorderLayout.CENTER);
 
+        // Table model
+        petList = new ArrayList<>();
+        tableModel = new DefaultTableModel(new String[]{"Type", "Name"}, 0);
+        petTable = new JTable(tableModel);
+        frame.add(new JScrollPane(petTable), BorderLayout.SOUTH);
+
         // Listener untuk tombol tambah
-        addButton.addActionListener(new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                addPet();
-            }
-        });
+        addButton.addActionListener(e -> addPet());
+
+        // Listener untuk tombol edit
+        editButton.addActionListener(e -> editPet());
     }
 
     private void addPet() {
@@ -109,7 +133,27 @@ public class PetManagementApp {
             pet = new Cat(name); // Pembuatan object Cat
         }
 
+        petList.add(pet);
+        tableModel.addRow(new Object[]{pet.getType(), pet.getName()});
+
         outputArea.append("Added: " + pet.getType() + " - " + pet.getName() + "\n");
+    }
+
+    private void editPet() {
+        int selectedRow = petTable.getSelectedRow();
+        if (selectedRow != -1) {
+            String newName = JOptionPane.showInputDialog("Enter new pet name:");
+            String newType = (String) JOptionPane.showInputDialog(frame, "Select pet type:", "Pet Type",
+                    JOptionPane.QUESTION_MESSAGE, null, new String[]{"Dog", "Cat"}, petTypeComboBox.getSelectedItem());
+
+            Pet selectedPet = petList.get(selectedRow);
+            selectedPet.setName(newName);
+            selectedPet.setType(newType);
+            tableModel.setValueAt(newType, selectedRow, 0);
+            tableModel.setValueAt(newName, selectedRow, 1);
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a pet to edit.");
+        }
     }
 
     public void display() {
@@ -117,7 +161,7 @@ public class PetManagementApp {
     }
 
     public static void main(String[] args) {
-        PetManagementApp app = new PetManagementApp(); // Pembuatan object PetManagementApp
+        PetManagementApp app = new PetManagementApp();
         app.display();
     }
 }
