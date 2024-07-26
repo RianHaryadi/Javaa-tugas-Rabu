@@ -53,14 +53,14 @@ class Animal implements Pet {
     }
 }
 
-// Subclass untuk Anjing, mewarisi dari Animal (inheritance)
+// Subclass untuk Anjing, mewarisi dari Animal 
 class Dog extends Animal {
     public Dog(String name) {
         super(name, "Dog");
     }
 }
 
-// Subclass untuk Kucing, mewarisi dari Animal (inheritance)
+// Subclass untuk Kucing, mewarisi dari Animal
 class Cat extends Animal {
     public Cat(String name) {
         super(name, "Cat");
