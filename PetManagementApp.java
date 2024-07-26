@@ -85,7 +85,7 @@ public class PetManagementApp {
 
         // Panel untuk input
         JPanel inputPanel = new JPanel();
-        inputPanel.setLayout(new GridLayout(3, 2));
+        inputPanel.setLayout(new GridLayout(4, 2));
 
         inputPanel.add(new JLabel("Pet Name:"));
         petNameField = new JTextField();
@@ -100,6 +100,9 @@ public class PetManagementApp {
 
         JButton editButton = new JButton("Edit Pet");
         inputPanel.add(editButton);
+
+        JButton deleteButton = new JButton("Delete Pet");
+        inputPanel.add(deleteButton);
 
         frame.add(inputPanel, BorderLayout.NORTH);
 
@@ -120,6 +123,9 @@ public class PetManagementApp {
 
         // Listener untuk tombol edit
         editButton.addActionListener(e -> editPet());
+
+        // Listener untuk tombol hapus
+        deleteButton.addActionListener(e -> deletePet());
     }
 
     private void addPet() {
@@ -153,6 +159,17 @@ public class PetManagementApp {
             tableModel.setValueAt(newName, selectedRow, 1);
         } else {
             JOptionPane.showMessageDialog(frame, "Please select a pet to edit.");
+        }
+    }
+
+    private void deletePet() {
+        int selectedRow = petTable.getSelectedRow();
+        if (selectedRow != -1) {
+            petList.remove(selectedRow);
+            tableModel.removeRow(selectedRow);
+            outputArea.append("Deleted pet at row: " + selectedRow + "\n");
+        } else {
+            JOptionPane.showMessageDialog(frame, "Please select a pet to delete.");
         }
     }
 
